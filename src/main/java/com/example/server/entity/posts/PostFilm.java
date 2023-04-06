@@ -1,7 +1,7 @@
 package com.example.server.entity.posts;
 
 import com.example.server.entity.comments.CommentFilm;
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.Data;
 
 import java.util.ArrayList;

@@ -10,9 +10,9 @@ import java.util.Optional;
 
 @Repository
 public interface PostFilmRepository extends JpaRepository<PostFilm, Long> {
-    /*List<PostFilm> findAllByUserOrderByCreatedDateDesc(User user);
+    //List<PostFilm> findAllByUserOrderByCreatedDateDesc(User user);
 
-    List<PostFilm> findAllByOrderByCreatedDateDesc();
 
-    Optional<PostFilm> findPostByIdAndUser(Long id, User user);*/
+
+    Optional<PostFilm> findPostById(Long id);
 }

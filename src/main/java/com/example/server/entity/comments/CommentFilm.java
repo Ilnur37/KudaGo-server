@@ -1,7 +1,7 @@
 package com.example.server.entity.comments;
 
 import com.example.server.entity.posts.PostFilm;
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
