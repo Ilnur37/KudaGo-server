@@ -1,4 +1,4 @@
-package com.example.server.repository;
+package com.example.server.repository.posts;
 
 import com.example.server.entity.User;
 import com.example.server.entity.posts.PostFilm;
@@ -14,5 +14,5 @@ public interface PostFilmRepository extends JpaRepository<PostFilm, Long> {
 
 
 
-    Optional<PostFilm> findPostById(Long id);
+    //Optional<PostFilm> findById(Long id);
 }

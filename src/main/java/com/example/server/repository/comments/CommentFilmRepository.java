@@ -1,4 +1,4 @@
-package com.example.server.repository;
+package com.example.server.repository.comments;
 
 import com.example.server.entity.comments.CommentFilm;
 import com.example.server.entity.posts.PostFilm;

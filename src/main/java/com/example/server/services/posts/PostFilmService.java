@@ -1,17 +1,16 @@
-package com.example.server.services;
+package com.example.server.services.posts;
 
 import com.example.server.dto.PostFilmDTO;
-import com.example.server.entity.ImageModel;
+import com.example.server.entity.images.ImageFilmModel;
 import com.example.server.entity.posts.PostFilm;
 import com.example.server.exceptions.PostNotFoundException;
-import com.example.server.repository.ImageRepository;
-import com.example.server.repository.PostFilmRepository;
+import com.example.server.repository.images.ImageFilmRepository;
+import com.example.server.repository.posts.PostFilmRepository;
 import com.example.server.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,15 +20,15 @@ public class PostFilmService {
 
     private final PostFilmRepository postFilmRepository;
     private final UserRepository userRepository;
-    private final ImageRepository imageRepository;
+    private final ImageFilmRepository imageRepository;
 
-    public PostFilmService(PostFilmRepository postFilmRepository, UserRepository userRepository, ImageRepository imageRepository) {
+    public PostFilmService(PostFilmRepository postFilmRepository, UserRepository userRepository, ImageFilmRepository imageRepository) {
         this.postFilmRepository = postFilmRepository;
         this.userRepository = userRepository;
         this.imageRepository = imageRepository;
     }
 
-    public PostFilm createPost(PostFilmDTO postDTO, Principal principal) {
+    public PostFilm createPost(PostFilmDTO postDTO) {
         PostFilm post = new PostFilm();
         post.setTitle(postDTO.getTitle());
         post.setInfo(postDTO.getInfo());
@@ -46,7 +45,7 @@ public class PostFilmService {
     }
 
     public PostFilm getPostById(Long postId) {
-        return postFilmRepository.findPostById(postId)
+        return postFilmRepository.findById(postId)
                 .orElseThrow(() -> new PostNotFoundException(
                         "Post cannot be found"));
     }
@@ -71,7 +70,7 @@ public class PostFilmService {
 
     public void deletePost(Long postId) {
         PostFilm post = getPostById(postId);
-        Optional<ImageModel> imageModel = imageRepository.findByPostId(post.getId());
+        Optional<ImageFilmModel> imageModel = imageRepository.findByPostId(post.getId());
         postFilmRepository.delete(post);
         imageModel.ifPresent(imageRepository::delete);
     }

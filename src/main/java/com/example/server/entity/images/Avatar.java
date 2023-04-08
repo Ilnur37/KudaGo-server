@@ -1,12 +1,13 @@
-package com.example.server.entity;
+package com.example.server.entity.images;
 
-import javax.persistence.*;
 import lombok.Data;
 import net.minidev.json.annotate.JsonIgnore;
 
+import javax.persistence.*;
+
 @Data
 @Entity
-public class ImageModel {
+public class Avatar {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -15,8 +16,6 @@ public class ImageModel {
     @Lob
     @Column(columnDefinition = "LONGBLOB")
     private byte[] imageBytes;
-    @JsonIgnore
-    private long postId;
     @JsonIgnore
     private long userId;
 }
