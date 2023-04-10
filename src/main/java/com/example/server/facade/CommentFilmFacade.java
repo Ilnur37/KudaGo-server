@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class CommentFilmFacade {
-    public CommentFilmDTO commentToCommentDTO(CommentFilm commentFilm) {
+    public CommentFilmDTO commentToCommentFilmDTO(CommentFilm commentFilm) {
         CommentFilmDTO commentFilmDTO = new CommentFilmDTO();
         commentFilmDTO.setId(commentFilm.getId());
         commentFilmDTO.setMessage(commentFilm.getMessage());
@@ -15,4 +15,3 @@ public class CommentFilmFacade {
         return commentFilmDTO;
     }
 }
-

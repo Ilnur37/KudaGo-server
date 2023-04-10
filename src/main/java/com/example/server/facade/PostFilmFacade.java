@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class PostFilmFacade {
-    public PostFilmDTO postToPostDTO(PostFilm postFilm) {
+    public PostFilmDTO postToPostFilmDTO(PostFilm postFilm) {
         PostFilmDTO postFilmDTO = new PostFilmDTO();
         postFilmDTO.setId(postFilm.getId());
         postFilmDTO.setTitle(postFilm.getTitle());
