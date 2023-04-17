@@ -1,14 +1,10 @@
 package com.example.server.services.posts;
 
 import com.example.server.dto.PostFilmDTO;
-import com.example.server.entity.images.ImageFilmModel;
-import com.example.server.entity.posts.PostFilm;
+import com.example.server.entity.film.PostFilm;
 import com.example.server.exceptions.PostNotFoundException;
-import com.example.server.repository.images.ImageFilmRepository;
 import com.example.server.repository.posts.PostFilmRepository;
 import com.example.server.repository.UserRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,16 +12,13 @@ import java.util.Optional;
 
 @Service
 public class PostFilmService {
-    public static final Logger LOG = LoggerFactory.getLogger(PostFilmService.class);
 
     private final PostFilmRepository postFilmRepository;
     private final UserRepository userRepository;
-    private final ImageFilmRepository imageRepository;
 
-    public PostFilmService(PostFilmRepository postFilmRepository, UserRepository userRepository, ImageFilmRepository imageRepository) {
+    public PostFilmService(PostFilmRepository postFilmRepository, UserRepository userRepository) {
         this.postFilmRepository = postFilmRepository;
         this.userRepository = userRepository;
-        this.imageRepository = imageRepository;
     }
 
     public PostFilm createPost(PostFilmDTO postDTO) {
@@ -35,6 +28,7 @@ public class PostFilmService {
         post.setShortInfo(postDTO.getShortInfo());
         post.setGenre(postDTO.getGenre());
         post.setCinema(postDTO.getCinema());
+        post.setImage(postDTO.getImage());
         post.setLikes(0);
 
         return postFilmRepository.save(post);
@@ -70,8 +64,6 @@ public class PostFilmService {
 
     public void deletePost(Long postId) {
         PostFilm post = getPostById(postId);
-        Optional<ImageFilmModel> imageModel = imageRepository.findByPostId(post.getId());
         postFilmRepository.delete(post);
-        imageModel.ifPresent(imageRepository::delete);
     }
 }

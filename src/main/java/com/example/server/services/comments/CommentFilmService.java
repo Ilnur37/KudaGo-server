@@ -2,8 +2,8 @@ package com.example.server.services.comments;
 
 import com.example.server.dto.CommentFilmDTO;
 import com.example.server.entity.User;
-import com.example.server.entity.comments.CommentFilm;
-import com.example.server.entity.posts.PostFilm;
+import com.example.server.entity.film.CommentFilm;
+import com.example.server.entity.film.PostFilm;
 import com.example.server.exceptions.PostNotFoundException;
 import com.example.server.repository.comments.CommentFilmRepository;
 import com.example.server.repository.posts.PostFilmRepository;

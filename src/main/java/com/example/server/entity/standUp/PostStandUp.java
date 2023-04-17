@@ -1,9 +1,8 @@
-package com.example.server.entity.posts;
+package com.example.server.entity.standUp;
 
-import com.example.server.entity.comments.CommentFilm;
-import javax.persistence.*;
 import lombok.Data;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -11,7 +10,7 @@ import java.util.Set;
 
 @Data
 @Entity
-public class PostFilm {
+public class PostStandUp {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -20,7 +19,7 @@ public class PostFilm {
     private String info;
     private String shortInfo;
     private String genre;
-    private String cinema;
+    private String executor;
     private Integer likes;
 
     @Column
@@ -28,9 +27,9 @@ public class PostFilm {
     private Set<String> likedUser = new HashSet<>();
 
     @OneToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER,
-    mappedBy = "post", orphanRemoval = true)
-    private List<CommentFilm> comments = new ArrayList<>();
+            mappedBy = "post", orphanRemoval = true)
+    private List<CommentStandUp> comments = new ArrayList<>();
 
-    public PostFilm() {
+    public PostStandUp() {
     }
 }

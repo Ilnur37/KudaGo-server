@@ -1,4 +1,4 @@
-package com.example.server.entity.images;
+package com.example.server.entity;
 
 import lombok.Data;
 import net.minidev.json.annotate.JsonIgnore;

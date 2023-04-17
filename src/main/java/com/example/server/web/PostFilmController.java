@@ -1,7 +1,7 @@
 package com.example.server.web;
 
 import com.example.server.dto.PostFilmDTO;
-import com.example.server.entity.posts.PostFilm;
+import com.example.server.entity.film.PostFilm;
 import com.example.server.facade.PostFilmFacade;
 import com.example.server.payload.response.MessageResponse;
 import com.example.server.services.posts.PostFilmService;
@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("api/postfilm")
+@RequestMapping("api/postFilm")
 @CrossOrigin
 public class PostFilmController {
     @Autowired

@@ -1,7 +1,7 @@
 package com.example.server.facade;
 
 import com.example.server.dto.PostFilmDTO;
-import com.example.server.entity.posts.PostFilm;
+import com.example.server.entity.film.PostFilm;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -14,6 +14,7 @@ public class PostFilmFacade {
         postFilmDTO.setShortInfo(postFilm.getShortInfo());
         postFilmDTO.setGenre(postFilm.getGenre());
         postFilmDTO.setCinema(postFilm.getCinema());
+        postFilmDTO.setImage(postFilm.getImage());
         postFilmDTO.setLikes(postFilm.getLikes());
         postFilmDTO.setUsersLiked(postFilm.getLikedUser());
 

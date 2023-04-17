@@ -1,7 +1,7 @@
 package com.example.server.facade;
 
 import com.example.server.dto.CommentFilmDTO;
-import com.example.server.entity.comments.CommentFilm;
+import com.example.server.entity.film.CommentFilm;
 import org.springframework.stereotype.Component;
 
 @Component

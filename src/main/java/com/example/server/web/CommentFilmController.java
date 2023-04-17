@@ -1,7 +1,7 @@
 package com.example.server.web;
 
 import com.example.server.dto.CommentFilmDTO;
-import com.example.server.entity.comments.CommentFilm;
+import com.example.server.entity.film.CommentFilm;
 import com.example.server.facade.CommentFilmFacade;
 import com.example.server.payload.response.MessageResponse;
 import com.example.server.services.comments.CommentFilmService;

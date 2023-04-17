@@ -1,14 +1,14 @@
-package com.example.server.entity.comments;
+package com.example.server.entity.standUp;
 
-import com.example.server.entity.posts.PostFilm;
-import javax.persistence.*;
+import com.example.server.entity.film.PostFilm;
 import lombok.Data;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Data
 @Entity
-public class CommentFilm {
+public class CommentStandUp {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -27,5 +27,4 @@ public class CommentFilm {
     protected void onCreate() {
         this.createdDate = LocalDateTime.now();
     }
-
 }

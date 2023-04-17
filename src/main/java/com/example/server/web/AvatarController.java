@@ -1,6 +1,6 @@
 package com.example.server.web;
 
-import com.example.server.entity.images.Avatar;
+import com.example.server.entity.Avatar;
 import com.example.server.payload.response.MessageResponse;
 import com.example.server.services.images.AvatarService;
 import org.springframework.beans.factory.annotation.Autowired;

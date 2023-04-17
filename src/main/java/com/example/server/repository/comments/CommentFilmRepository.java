@@ -1,7 +1,7 @@
 package com.example.server.repository.comments;
 
-import com.example.server.entity.comments.CommentFilm;
-import com.example.server.entity.posts.PostFilm;
+import com.example.server.entity.film.CommentFilm;
+import com.example.server.entity.film.PostFilm;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

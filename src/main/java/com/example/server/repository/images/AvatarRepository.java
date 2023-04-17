@@ -1,6 +1,6 @@
 package com.example.server.repository.images;
 
-import com.example.server.entity.images.Avatar;
+import com.example.server.entity.Avatar;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
