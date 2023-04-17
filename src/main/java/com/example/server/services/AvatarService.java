@@ -1,13 +1,17 @@
-package com.example.server.services.images;
+package com.example.server.services;
 
 import com.example.server.entity.User;
+import com.example.server.entity.Avatar;
 import com.example.server.repository.UserRepository;
+import com.example.server.repository.images.AvatarRepository;
 import com.example.server.services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -19,14 +23,43 @@ import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
 @Service
-public class ImageService {
+public class AvatarService{
     public static final Logger LOG = LoggerFactory.getLogger(UserService.class);
 
     private final UserRepository userRepository;
+    private final AvatarRepository avatarRepository;
 
     @Autowired
-    public ImageService(UserRepository userRepository) {
+    public AvatarService(UserRepository userRepository, AvatarRepository avatarRepository) {
         this.userRepository = userRepository;
+        this.avatarRepository = avatarRepository;
+    }
+
+    public void uploadImageToUser(MultipartFile file, Principal principal) throws IOException {
+        User user = getUserByPrincipal(principal);
+        LOG.info("Uploading image profile to User {}", user.getUsername());
+
+        Avatar userProfileImage = avatarRepository.findByUserId(user.getId()).orElse(null);
+        if (!ObjectUtils.isEmpty(userProfileImage)) {
+            avatarRepository.delete(userProfileImage);
+        }
+
+        Avatar avatar = new Avatar();
+        avatar.setUserId(user.getId());
+        avatar.setImageBytes(compressBytes(file.getBytes()));
+        avatar.setName(file.getOriginalFilename());
+        avatarRepository.save(avatar);
+    }
+
+    public Avatar getImageToUser(Principal principal) {
+        User user = getUserByPrincipal(principal);
+
+        Avatar avatar = avatarRepository.findByUserId(user.getId()).orElse(null);
+        if (!ObjectUtils.isEmpty(avatar)) {
+            avatar.setImageBytes(decompressBytes(avatar.getImageBytes()));
+        }
+
+        return avatar;
     }
 
     byte[] compressBytes(byte[] data) {
@@ -48,7 +81,7 @@ public class ImageService {
         return outputStream.toByteArray();
     }
 
-     static byte[] decompressBytes(byte[] data) {
+    static byte[] decompressBytes(byte[] data) {
         Inflater inflater = new Inflater();
         inflater.setInput(data);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length);

@@ -20,6 +20,7 @@ public class PostStandUp {
     private String shortInfo;
     private String genre;
     private String executor;
+    private String image;
     private Integer likes;
 
     @Column

@@ -1,9 +1,9 @@
 package com.example.server.services.posts;
 
-import com.example.server.dto.PostFilmDTO;
-import com.example.server.entity.film.PostFilm;
+import com.example.server.dto.PostStandUpDTO;
+import com.example.server.entity.standUp.PostStandUp;
 import com.example.server.exceptions.PostNotFoundException;
-import com.example.server.repository.posts.PostFilmRepository;
+import com.example.server.repository.posts.PostStandUpRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,39 +11,39 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class PostFilmService {
-    private final PostFilmRepository postFilmRepository;
+public class PostStandUpService {
+    private final PostStandUpRepository postStandUpRepository;
 
     @Autowired
-    public PostFilmService(PostFilmRepository postFilmRepository) {
-        this.postFilmRepository = postFilmRepository;
+    public PostStandUpService(PostStandUpRepository postStandUpRepository) {
+        this.postStandUpRepository = postStandUpRepository;
     }
 
-    public PostFilm createPost(PostFilmDTO postDTO) {
-        PostFilm post = new PostFilm();
+    public PostStandUp createPost(PostStandUpDTO postDTO) {
+        PostStandUp post = new PostStandUp();
         post.setTitle(postDTO.getTitle());
         post.setInfo(postDTO.getInfo());
         post.setShortInfo(postDTO.getShortInfo());
         post.setGenre(postDTO.getGenre());
-        post.setCinema(postDTO.getCinema());
+        post.setExecutor(postDTO.getExecutor());
         post.setImage(postDTO.getImage());
         post.setLikes(0);
 
-        return postFilmRepository.save(post);
+        return postStandUpRepository.save(post);
     }
 
-    public List<PostFilm> getAllPosts() {
-        return postFilmRepository.findAll();
+    public List<PostStandUp> getAllPosts() {
+        return postStandUpRepository.findAll();
     }
 
-    public PostFilm getPostById(Long postId) {
-        return postFilmRepository.findById(postId)
+    public PostStandUp getPostById(Long postId) {
+        return postStandUpRepository.findById(postId)
                 .orElseThrow(() -> new PostNotFoundException(
                         "Post cannot be found"));
     }
 
-    public PostFilm likePost(Long postId, String username) {
-        PostFilm post = postFilmRepository.findById(postId)
+    public PostStandUp likePost(Long postId, String username) {
+        PostStandUp post = postStandUpRepository.findById(postId)
                 .orElseThrow(() -> new PostNotFoundException("Post cannot be found"));
 
         Optional<String> userLiked = post.getLikedUser()
@@ -57,11 +57,11 @@ public class PostFilmService {
             post.setLikes(post.getLikes() + 1);
             post.getLikedUser().add(username);
         }
-        return postFilmRepository.save(post);
+        return postStandUpRepository.save(post);
     }
 
     public void deletePost(Long postId) {
-        PostFilm post = getPostById(postId);
-        postFilmRepository.delete(post);
+        PostStandUp post = getPostById(postId);
+        postStandUpRepository.delete(post);
     }
 }

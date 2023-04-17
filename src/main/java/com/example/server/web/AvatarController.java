@@ -2,7 +2,7 @@ package com.example.server.web;
 
 import com.example.server.entity.Avatar;
 import com.example.server.payload.response.MessageResponse;
-import com.example.server.services.images.AvatarService;
+import com.example.server.services.AvatarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
