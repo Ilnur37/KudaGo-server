@@ -13,7 +13,7 @@ public class CommentStandUp {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @ManyToOne(fetch = FetchType.EAGER)
-    private PostFilm post;
+    private PostStandUp post;
     @Column(nullable = false)
     private String username;
     @Column(nullable = false)

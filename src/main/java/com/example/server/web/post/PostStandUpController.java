@@ -1,10 +1,10 @@
-package com.example.server.web;
+package com.example.server.web.post;
 
-import com.example.server.dto.PostFilmDTO;
-import com.example.server.entity.film.PostFilm;
-import com.example.server.facade.PostFilmFacade;
+import com.example.server.dto.PostStandUpDTO;
+import com.example.server.entity.standUp.PostStandUp;
+import com.example.server.facade.PostStandUpFacade;
 import com.example.server.payload.response.MessageResponse;
-import com.example.server.services.posts.PostFilmService;
+import com.example.server.services.posts.PostStandUpService;
 import com.example.server.validations.ResponseErrorValidation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,50 +18,50 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("api/postFilm")
+@RequestMapping("api/postStandUp")
 @CrossOrigin
-public class PostFilmController {
+public class PostStandUpController {
     @Autowired
-    private PostFilmFacade postFilmFacade;
+    private PostStandUpFacade postFacade;
     @Autowired
-    private PostFilmService postFilmService;
+    private PostStandUpService postService;
     @Autowired
     private ResponseErrorValidation responseErrorValidation;
 
     @PostMapping("/create")
-    public ResponseEntity<Object> createPost(@Valid @RequestBody PostFilmDTO postFilmDTO,
+    public ResponseEntity<Object> createPost(@Valid @RequestBody PostStandUpDTO postDTO,
                                              BindingResult bindingResult) {
         ResponseEntity<Object> errors = responseErrorValidation.mapValidationService(bindingResult);
         if (!ObjectUtils.isEmpty(errors)) return errors;
 
-        PostFilm postFilm = postFilmService.createPost(postFilmDTO);
-        PostFilmDTO createdPost = postFilmFacade.postToPostFilmDTO(postFilm);
+        PostStandUp postStandUp = postService.createPost(postDTO);
+        PostStandUpDTO createdPost = postFacade.postToPostStandUpDTO(postStandUp);
 
         return new ResponseEntity<>(createdPost, HttpStatus.OK);
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<PostFilmDTO>> getAllPost() {
-        List<PostFilmDTO> postDTOList = postFilmService.getAllPosts()
+    public ResponseEntity<List<PostStandUpDTO>> getAllPost() {
+        List<PostStandUpDTO> postDTOList = postService.getAllPosts()
                 .stream()
-                .map(postFilmFacade::postToPostFilmDTO)
+                .map(postFacade::postToPostStandUpDTO)
                 .collect(Collectors.toList());
 
         return new ResponseEntity<>(postDTOList, HttpStatus.OK);
     }
 
     @PostMapping("/{postId}/{username}/like")
-    public ResponseEntity<PostFilmDTO> likePost(@PathVariable("postId") String postId,
-                                            @PathVariable("username") String username) {
-        PostFilm postFilm = postFilmService.likePost(Long.parseLong(postId), username);
-        PostFilmDTO postFilmDTO = postFilmFacade.postToPostFilmDTO(postFilm);
+    public ResponseEntity<PostStandUpDTO> likePost(@PathVariable("postId") String postId,
+                                                @PathVariable("username") String username) {
+        PostStandUp postStandUp = postService.likePost(Long.parseLong(postId), username);
+        PostStandUpDTO postStandUpDTO = postFacade.postToPostStandUpDTO(postStandUp);
 
-        return new ResponseEntity<>(postFilmDTO, HttpStatus.OK);
+        return new ResponseEntity<>(postStandUpDTO, HttpStatus.OK);
     }
 
     @PostMapping("/{postId}/delete")
     public ResponseEntity<MessageResponse> deletePost(@PathVariable("postId") String postId) {
-        postFilmService.deletePost(Long.parseLong(postId));
+        postService.deletePost(Long.parseLong(postId));
         return new ResponseEntity<>(new MessageResponse("Post was deleted"), HttpStatus.OK);
     }
 }
