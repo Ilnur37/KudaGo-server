@@ -4,6 +4,9 @@ import com.example.server.dto.PostFilmDTO;
 import com.example.server.entity.film.PostFilm;
 import com.example.server.exceptions.PostNotFoundException;
 import com.example.server.repository.posts.PostFilmRepository;
+import com.example.server.services.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +15,7 @@ import java.util.Optional;
 
 @Service
 public class PostFilmService {
+    public static final Logger LOG = LoggerFactory.getLogger(UserService.class);
     private final PostFilmRepository postFilmRepository;
 
     @Autowired
@@ -37,9 +41,12 @@ public class PostFilmService {
     }
 
     public PostFilm getPostById(Long postId) {
-        return postFilmRepository.findById(postId)
+        PostFilm postFilm = postFilmRepository.findById(postId)
                 .orElseThrow(() -> new PostNotFoundException(
                         "Post cannot be found"));
+        LOG.info(postFilm.getTitle());
+        return postFilm;
+
     }
 
     public PostFilm likePost(Long postId, String username) {

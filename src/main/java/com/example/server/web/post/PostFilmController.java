@@ -50,6 +50,14 @@ public class PostFilmController {
         return new ResponseEntity<>(postDTOList, HttpStatus.OK);
     }
 
+    @GetMapping("/{postId}")
+    public ResponseEntity<PostFilmDTO> getFullInfo(@PathVariable("postId") String postId) {
+        PostFilm postFilm = postService.getPostById(Long.parseLong(postId));
+        PostFilmDTO postFilmDTO = postFacade.postToPostFilmDTO(postFilm);
+
+        return new ResponseEntity<>(postFilmDTO, HttpStatus.OK);
+    }
+
     @PostMapping("/{postId}/{username}/like")
     public ResponseEntity<PostFilmDTO> likePost(@PathVariable("postId") String postId,
                                             @PathVariable("username") String username) {

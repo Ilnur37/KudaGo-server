@@ -31,10 +31,13 @@ public class User implements UserDetails {
     @Column(length = 3000)
     private String password;
 
-    @ElementCollection(targetClass = ERole.class)
+    /*@ElementCollection(targetClass = ERole.class)
     @CollectionTable(name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"))
-    private Set<ERole> roles = new HashSet<>();
+    private Set<ERole> roles = new HashSet<>();*/
+
+    @Column
+    private ERole role;
 
     @JsonFormat(pattern = "yyyy-mm-dd HH:mm:ss")
     @Column(updatable = false)
@@ -49,20 +52,19 @@ public class User implements UserDetails {
     public User(Long id,
                 String username,
                 String email,
-                String password,
-                Collection<? extends GrantedAuthority> authorities) {
+                String password
+                /*Collection<? extends GrantedAuthority> authorities*/) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.password = password;
-        this.authorities = authorities;
+        /*this.authorities = authorities*/;
     }
 
     @PrePersist
     protected void onCreate() {
         this.createdDate = LocalDateTime.now();
     }
-
 
     @Override
     public String getPassword() {
