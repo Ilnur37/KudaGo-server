@@ -31,6 +31,7 @@ public class PostFilmService {
         post.setGenre(postDTO.getGenre());
         post.setCinema(postDTO.getCinema());
         post.setImage(postDTO.getImage());
+        post.setBackgroundImg(post.getBackgroundImg());
         post.setLikes(0);
 
         return postFilmRepository.save(post);
@@ -46,7 +47,18 @@ public class PostFilmService {
                         "Post cannot be found"));
         LOG.info(postFilm.getTitle());
         return postFilm;
+    }
 
+    public PostFilm updatePost(PostFilm postFilm, PostFilmDTO postDTO) {
+        postFilm.setTitle(postDTO.getTitle());
+        postFilm.setInfo(postDTO.getInfo());
+        postFilm.setShortInfo(postDTO.getShortInfo());
+        postFilm.setGenre(postDTO.getGenre());
+        postFilm.setCinema(postDTO.getCinema());
+        postFilm.setImage(postDTO.getImage());
+        postFilm.setBackgroundImg(postDTO.getBackgroundImg());
+
+        return postFilm;
     }
 
     public PostFilm likePost(Long postId, String username) {

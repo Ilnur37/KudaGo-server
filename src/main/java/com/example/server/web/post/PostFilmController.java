@@ -50,6 +50,16 @@ public class PostFilmController {
         return new ResponseEntity<>(postDTOList, HttpStatus.OK);
     }
 
+    @PostMapping("/{postId}/update")
+    public ResponseEntity<Object> updatePost(@PathVariable("postId") String postId,
+                                             @Valid @RequestBody PostFilmDTO postDTO) {
+        PostFilm postFilm = postService.getPostById(Long.parseLong(postId));
+        PostFilm post = postService.updatePost(postFilm, postDTO);
+
+        PostFilmDTO updatedPost = postFacade.postToPostFilmDTO(post);
+        return new ResponseEntity<>(updatedPost, HttpStatus.OK);
+    }
+
     @GetMapping("/{postId}")
     public ResponseEntity<PostFilmDTO> getFullInfo(@PathVariable("postId") String postId) {
         PostFilm postFilm = postService.getPostById(Long.parseLong(postId));

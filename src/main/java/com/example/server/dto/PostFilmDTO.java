@@ -17,6 +17,7 @@ public class PostFilmDTO {
     private String genre;
     private String cinema;
     private String image;
+    private String backgroundImg;
     private Integer likes;
     private Set<String> usersLiked;
 }

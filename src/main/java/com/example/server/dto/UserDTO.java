@@ -1,5 +1,6 @@
 package com.example.server.dto;
 
+import com.example.server.entity.enums.ERole;
 import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;
@@ -13,4 +14,5 @@ public class UserDTO {
     private String lastname;
     private String username;
     private String bio;
+    private ERole role;
 }
