@@ -5,12 +5,18 @@ import com.example.server.entity.film.PostFilm;
 import com.example.server.exceptions.PostNotFoundException;
 import com.example.server.repository.posts.PostFilmRepository;
 import com.example.server.services.UserService;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -58,7 +64,7 @@ public class PostFilmService {
         postFilm.setImage(postDTO.getImage());
         postFilm.setBackgroundImg(postDTO.getBackgroundImg());
 
-        return postFilm;
+        return postFilmRepository.save(postFilm);
     }
 
     public PostFilm likePost(Long postId, String username) {
@@ -82,5 +88,97 @@ public class PostFilmService {
     public void deletePost(Long postId) {
         PostFilm post = getPostById(postId);
         postFilmRepository.delete(post);
+    }
+
+
+    public void createFilm() throws IOException {
+        Document doc = Jsoup
+                .connect("https://afisha.yandex.ru/moscow/selections/cinema-today")
+                .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36")
+                .get();
+
+
+        Elements postTitleEl = doc.
+                getElementsByClass("event events-list__item yandex-sans");
+
+        for (Element el : postTitleEl) {
+            String detailsLink = "https://afisha.yandex.ru" + el
+                    .getElementsByAttributeValue("data-testid", "event-card-link")
+                    .attr("href");
+            PostFilm film = new PostFilm();
+
+            film.setTitle(el
+                    .getElementsByAttributeValue("data-component", "EventCard__EventInfo__Title")
+                    .first()
+                    .text());
+
+            film.setCinema(el
+                    .getElementsByAttributeValue("data-component", "EventCard__EventInfo__Details")
+                    .first()
+                    .text());
+
+            film.setBackgroundImg(el
+                    .getElementsByClass("NqGVWi")
+                    .attr("src"));
+
+            film.setDetailsLink(detailsLink);
+
+            postFilmRepository.save(film);
+        }
+    }
+
+    public void createFilmDetails() throws IOException {
+        List<PostFilm> allFilms = postFilmRepository.findAll();
+        for (PostFilm film : allFilms) {
+            if (film.getGenre() != null) continue;
+            if (film.getDetailsLink() == null) continue;
+            Document postDetails = Jsoup.connect(film.getDetailsLink()).get();
+            film.setGenre(postDetails
+                    .getElementsByClass("tags tags_size_l tags_theme_light event-concert-heading__tags")
+                    .text());
+
+            film.setShortInfo(postDetails
+                    .getElementsByClass("event-concert-description__argument yandex-sans")
+                    .text());
+
+            film.setInfo(postDetails
+                    .getElementsByClass("concert-description__text-wrap")
+                    .text() + "\n" + postDetails
+                    .getElementsByClass("event-attributes__inner")
+                    .text());
+
+            film.setRating(postDetails.
+                    getElementsByClass("Value-ie9gjh-2 iZlkBd")
+                    .text());
+
+            film.setImage(postDetails
+                    .getElementsByClass("image event-concert-heading__poster")
+                    .attr("src"));
+
+
+
+            /*int j = 0;
+            String result = "";
+            while (!postDetails
+                    .getElementsByClass("event-attributes__category").get(j).text().equals("Год производства")) {
+                result += postDetails
+                        .getElementsByClass("event-attributes__category").get(j).text()
+                        + ' ' +
+                        postDetails
+                                .getElementsByClass("event-attributes__category-value").get(j).text()
+                        + '\n';
+                j++;
+            }
+            result += postDetails
+                    .getElementsByClass("event-attributes__category").get(j).text()
+                    + ' ' +
+                    postDetails
+                            .getElementsByClass("event-attributes__category-value").get(j).text()
+                    + '\n';
+
+            film.setInfo(result);*/
+
+            postFilmRepository.save(film);
+        }
     }
 }

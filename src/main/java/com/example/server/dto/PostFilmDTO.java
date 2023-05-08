@@ -2,6 +2,7 @@ package com.example.server.dto;
 
 import lombok.Data;
 
+import javax.persistence.Column;
 import javax.validation.constraints.NotEmpty;
 import java.util.Set;
 
@@ -19,5 +20,6 @@ public class PostFilmDTO {
     private String image;
     private String backgroundImg;
     private Integer likes;
+    private String rating;
     private Set<String> usersLiked;
 }

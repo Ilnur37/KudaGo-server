@@ -17,6 +17,7 @@ public class PostFilmFacade {
         postFilmDTO.setImage(postFilm.getImage());
         postFilmDTO.setBackgroundImg(postFilm.getBackgroundImg());
         postFilmDTO.setLikes(postFilm.getLikes());
+        postFilmDTO.setRating(postFilm.getRating());
         postFilmDTO.setUsersLiked(postFilm.getLikedUser());
 
         return postFilmDTO;

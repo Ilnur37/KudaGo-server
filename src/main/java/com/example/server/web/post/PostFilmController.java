@@ -14,6 +14,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,10 +51,9 @@ public class PostFilmController {
         return new ResponseEntity<>(postDTOList, HttpStatus.OK);
     }
 
-    @PostMapping("/{postId}/update")
-    public ResponseEntity<Object> updatePost(@PathVariable("postId") String postId,
-                                             @Valid @RequestBody PostFilmDTO postDTO) {
-        PostFilm postFilm = postService.getPostById(Long.parseLong(postId));
+    @PostMapping("/update")
+    public ResponseEntity<Object> updatePost(@Valid @RequestBody PostFilmDTO postDTO) {
+        PostFilm postFilm = postService.getPostById(postDTO.getId());
         PostFilm post = postService.updatePost(postFilm, postDTO);
 
         PostFilmDTO updatedPost = postFacade.postToPostFilmDTO(post);
@@ -81,5 +81,17 @@ public class PostFilmController {
     public ResponseEntity<MessageResponse> deletePost(@PathVariable("postId") String postId) {
         postService.deletePost(Long.parseLong(postId));
         return new ResponseEntity<>(new MessageResponse("Post was deleted"), HttpStatus.OK);
+    }
+
+    @PostMapping("/parser")
+    public ResponseEntity<Object> createPost() throws IOException {
+        postService.createFilm();
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/parser/fullParser")
+    public ResponseEntity<Object> createPostDetails() throws IOException {
+        postService.createFilmDetails();
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
