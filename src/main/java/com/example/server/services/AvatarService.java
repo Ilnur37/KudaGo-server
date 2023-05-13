@@ -4,7 +4,6 @@ import com.example.server.entity.User;
 import com.example.server.entity.Avatar;
 import com.example.server.repository.UserRepository;
 import com.example.server.repository.images.AvatarRepository;
-import com.example.server.services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

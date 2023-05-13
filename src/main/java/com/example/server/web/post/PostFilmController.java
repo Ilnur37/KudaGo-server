@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,14 +43,30 @@ public class PostFilmController {
         return new ResponseEntity<>(createdPost, HttpStatus.OK);
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<List<PostFilmDTO>> getAllPost() {
+    @GetMapping("/all/{sorted}")
+    public ResponseEntity<List<PostFilmDTO>> getAllPost(@PathVariable("sorted") String sorted) {
         List<PostFilmDTO> postDTOList = postService.getAllPosts()
                 .stream()
                 .map(postFacade::postToPostFilmDTO)
                 .collect(Collectors.toList());
 
+        if (!sorted.equals("default")) {
+            Collections.sort(postDTOList, (o1, o2) -> o1.getLikes() - o2.getLikes());
+
+            if (sorted.equals("desc"))
+
+                Collections.reverse(postDTOList);
+        }
+
         return new ResponseEntity<>(postDTOList, HttpStatus.OK);
+    }
+
+    @GetMapping("/info/{postId}")
+    public ResponseEntity<PostFilmDTO> getFullInfo(@PathVariable("postId") String postId) {
+        PostFilm postFilm = postService.getPostById(Long.parseLong(postId));
+        PostFilmDTO postFilmDTO = postFacade.postToPostFilmDTO(postFilm);
+
+        return new ResponseEntity<>(postFilmDTO, HttpStatus.OK);
     }
 
     @PostMapping("/update")
@@ -58,14 +76,6 @@ public class PostFilmController {
 
         PostFilmDTO updatedPost = postFacade.postToPostFilmDTO(post);
         return new ResponseEntity<>(updatedPost, HttpStatus.OK);
-    }
-
-    @GetMapping("/{postId}")
-    public ResponseEntity<PostFilmDTO> getFullInfo(@PathVariable("postId") String postId) {
-        PostFilm postFilm = postService.getPostById(Long.parseLong(postId));
-        PostFilmDTO postFilmDTO = postFacade.postToPostFilmDTO(postFilm);
-
-        return new ResponseEntity<>(postFilmDTO, HttpStatus.OK);
     }
 
     @PostMapping("/{postId}/{username}/like")
