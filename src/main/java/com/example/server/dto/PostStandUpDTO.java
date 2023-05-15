@@ -16,6 +16,7 @@ public class PostStandUpDTO {
     private String shortInfo;
     private String genre;
     private String executor;
+    private String address;
     private String image;
     private Integer likes;
     private Set<String> usersLiked;

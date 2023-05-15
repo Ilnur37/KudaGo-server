@@ -14,6 +14,7 @@ public class PostStandUpFacade {
         postFilmDTO.setShortInfo(postFilm.getShortInfo());
         postFilmDTO.setGenre(postFilm.getGenre());
         postFilmDTO.setExecutor(postFilm.getExecutor());
+        postFilmDTO.setAddress(postFilm.getAddress());
         postFilmDTO.setImage(postFilm.getImage());
         postFilmDTO.setLikes(postFilm.getLikes());
         postFilmDTO.setUsersLiked(postFilm.getLikedUser());

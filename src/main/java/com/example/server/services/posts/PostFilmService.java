@@ -15,60 +15,45 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class PostFilmService {
     public static final Logger LOG = LoggerFactory.getLogger(UserService.class);
-    private final PostFilmRepository postFilmRepository;
+    private final PostFilmRepository postRepository;
 
     @Autowired
-    public PostFilmService(PostFilmRepository postFilmRepository) {
-        this.postFilmRepository = postFilmRepository;
+    public PostFilmService(PostFilmRepository postRepository) {
+        this.postRepository = postRepository;
     }
 
-    public PostFilm createPost(PostFilmDTO postDTO) {
-        PostFilm post = new PostFilm();
+    public List<PostFilm> getAllPosts() {
+        return postRepository.findAll();
+    }
+
+    public PostFilm getPostById(Long postId) {
+        PostFilm post = postRepository.findById(postId)
+                .orElseThrow(() -> new PostNotFoundException(
+                        "Post cannot be found"));
+        LOG.info(post.getTitle());
+        return post;
+    }
+
+    public PostFilm updatePost(PostFilm post, PostFilmDTO postDTO) {
         post.setTitle(postDTO.getTitle());
         post.setInfo(postDTO.getInfo());
         post.setShortInfo(postDTO.getShortInfo());
         post.setGenre(postDTO.getGenre());
         post.setCinema(postDTO.getCinema());
         post.setImage(postDTO.getImage());
-        post.setBackgroundImg(post.getBackgroundImg());
-        post.setLikes(0);
+        post.setBackgroundImg(postDTO.getBackgroundImg());
 
-        return postFilmRepository.save(post);
-    }
-
-    public List<PostFilm> getAllPosts() {
-        return postFilmRepository.findAll();
-    }
-
-    public PostFilm getPostById(Long postId) {
-        PostFilm postFilm = postFilmRepository.findById(postId)
-                .orElseThrow(() -> new PostNotFoundException(
-                        "Post cannot be found"));
-        LOG.info(postFilm.getTitle());
-        return postFilm;
-    }
-
-    public PostFilm updatePost(PostFilm postFilm, PostFilmDTO postDTO) {
-        postFilm.setTitle(postDTO.getTitle());
-        postFilm.setInfo(postDTO.getInfo());
-        postFilm.setShortInfo(postDTO.getShortInfo());
-        postFilm.setGenre(postDTO.getGenre());
-        postFilm.setCinema(postDTO.getCinema());
-        postFilm.setImage(postDTO.getImage());
-        postFilm.setBackgroundImg(postDTO.getBackgroundImg());
-
-        return postFilmRepository.save(postFilm);
+        return postRepository.save(post);
     }
 
     public PostFilm likePost(Long postId, String username) {
-        PostFilm post = postFilmRepository.findById(postId)
+        PostFilm post = postRepository.findById(postId)
                 .orElseThrow(() -> new PostNotFoundException("Post cannot be found"));
 
         Optional<String> userLiked = post.getLikedUser()
@@ -82,21 +67,19 @@ public class PostFilmService {
             post.setLikes(post.getLikes() + 1);
             post.getLikedUser().add(username);
         }
-        return postFilmRepository.save(post);
+        return postRepository.save(post);
     }
 
     public void deletePost(Long postId) {
         PostFilm post = getPostById(postId);
-        postFilmRepository.delete(post);
+        postRepository.delete(post);
     }
 
-
-    public void createFilm() throws IOException {
+    public void createPost() throws IOException {
         Document doc = Jsoup
                 .connect("https://afisha.yandex.ru/moscow/selections/cinema-today")
                 .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36")
                 .get();
-
 
         Elements postTitleEl = doc.
                 getElementsByClass("event events-list__item yandex-sans");
@@ -105,82 +88,59 @@ public class PostFilmService {
             String detailsLink = "https://afisha.yandex.ru" + el
                     .getElementsByAttributeValue("data-testid", "event-card-link")
                     .attr("href");
-            PostFilm film = new PostFilm();
+            PostFilm post = new PostFilm();
 
-            film.setTitle(el
+            post.setTitle(el
                     .getElementsByAttributeValue("data-component", "EventCard__EventInfo__Title")
                     .first()
                     .text());
 
-            film.setCinema(el
+            post.setCinema(el
                     .getElementsByAttributeValue("data-component", "EventCard__EventInfo__Details")
                     .first()
                     .text());
 
-            film.setBackgroundImg(el
+            post.setBackgroundImg(el
                     .getElementsByClass("NqGVWi")
                     .attr("src"));
 
-            film.setLikes(0);
+            post.setLikes(0);
 
-            film.setDetailsLink(detailsLink);
+            post.setDetailsLink(detailsLink);
 
-            postFilmRepository.save(film);
+            postRepository.save(post);
         }
     }
 
-    public void createFilmDetails() throws IOException {
-        List<PostFilm> allFilms = postFilmRepository.findAll();
-        for (PostFilm film : allFilms) {
-            if (film.getGenre() != null) continue;
-            if (film.getDetailsLink() == null) continue;
-            Document postDetails = Jsoup.connect(film.getDetailsLink()).get();
-            film.setGenre(postDetails
+    public void createPostDetails() throws IOException {
+        List<PostFilm> allPosts = postRepository.findAll();
+        for (PostFilm post : allPosts) {
+            if (post.getGenre() != null) continue;
+            if (post.getDetailsLink() == null) continue;
+            Document postDetails = Jsoup.connect(post.getDetailsLink()).get();
+            post.setGenre(postDetails
                     .getElementsByClass("tags tags_size_l tags_theme_light event-concert-heading__tags")
                     .text());
 
-            film.setShortInfo(postDetails
+            post.setShortInfo(postDetails
                     .getElementsByClass("event-concert-description__argument yandex-sans")
                     .text());
 
-            film.setInfo(postDetails
+            post.setInfo(postDetails
                     .getElementsByClass("concert-description__text-wrap")
                     .text() + "\n" + postDetails
                     .getElementsByClass("event-attributes__inner")
                     .text());
 
-            film.setRating(postDetails.
+            post.setRating(postDetails.
                     getElementsByClass("Value-ie9gjh-2 iZlkBd")
                     .text());
 
-            film.setImage(postDetails
+            post.setImage(postDetails
                     .getElementsByClass("image event-concert-heading__poster")
                     .attr("src"));
 
-
-
-            /*int j = 0;
-            String result = "";
-            while (!postDetails
-                    .getElementsByClass("event-attributes__category").get(j).text().equals("Год производства")) {
-                result += postDetails
-                        .getElementsByClass("event-attributes__category").get(j).text()
-                        + ' ' +
-                        postDetails
-                                .getElementsByClass("event-attributes__category-value").get(j).text()
-                        + '\n';
-                j++;
-            }
-            result += postDetails
-                    .getElementsByClass("event-attributes__category").get(j).text()
-                    + ' ' +
-                    postDetails
-                            .getElementsByClass("event-attributes__category-value").get(j).text()
-                    + '\n';
-
-            film.setInfo(result);*/
-
-            postFilmRepository.save(film);
+            postRepository.save(post);
         }
     }
 }

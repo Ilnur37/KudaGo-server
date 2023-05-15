@@ -2,7 +2,6 @@ package com.example.server.dto;
 
 import lombok.Data;
 
-import javax.persistence.Column;
 import javax.validation.constraints.NotEmpty;
 import java.util.Set;
 

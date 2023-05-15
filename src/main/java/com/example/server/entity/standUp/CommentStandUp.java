@@ -1,6 +1,5 @@
 package com.example.server.entity.standUp;
 
-import com.example.server.entity.film.PostFilm;
 import lombok.Data;
 
 import javax.persistence.*;
