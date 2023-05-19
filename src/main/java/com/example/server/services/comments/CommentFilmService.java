@@ -1,6 +1,6 @@
 package com.example.server.services.comments;
 
-import com.example.server.dto.CommentFilmDTO;
+import com.example.server.dto.comments.CommentFilmDTO;
 import com.example.server.entity.User;
 import com.example.server.entity.film.CommentFilm;
 import com.example.server.entity.film.PostFilm;
@@ -28,9 +28,9 @@ public class CommentFilmService {
     private final UserRepository userRepository;
 
     @Autowired
-    public CommentFilmService(CommentFilmRepository commentFilmRepository, PostFilmRepository postFilmRepository, UserRepository userRepository) {
-        this.commentRepository = commentFilmRepository;
-        this.postRepository = postFilmRepository;
+    public CommentFilmService(CommentFilmRepository commentRepository, PostFilmRepository postRepository, UserRepository userRepository) {
+        this.commentRepository = commentRepository;
+        this.postRepository = postRepository;
         this.userRepository = userRepository;
     }
 

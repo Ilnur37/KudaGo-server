@@ -1,6 +1,6 @@
-package com.example.server.facade;
+package com.example.server.facade.comments;
 
-import com.example.server.dto.CommentStandUpDTO;
+import com.example.server.dto.comments.CommentStandUpDTO;
 import com.example.server.entity.standUp.CommentStandUp;
 import org.springframework.stereotype.Component;
 

@@ -1,8 +1,8 @@
 package com.example.server.web.comment;
 
-import com.example.server.dto.CommentFilmDTO;
+import com.example.server.dto.comments.CommentFilmDTO;
 import com.example.server.entity.film.CommentFilm;
-import com.example.server.facade.CommentFilmFacade;
+import com.example.server.facade.comments.CommentFilmFacade;
 import com.example.server.payload.response.MessageResponse;
 import com.example.server.services.comments.CommentFilmService;
 import com.example.server.validations.ResponseErrorValidation;

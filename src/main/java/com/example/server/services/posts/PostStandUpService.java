@@ -1,7 +1,6 @@
 package com.example.server.services.posts;
 
-import com.example.server.dto.PostStandUpDTO;
-import com.example.server.entity.film.PostFilm;
+import com.example.server.dto.posts.PostStandUpDTO;
 import com.example.server.entity.standUp.PostStandUp;
 import com.example.server.exceptions.PostNotFoundException;
 import com.example.server.repository.posts.PostStandUpRepository;

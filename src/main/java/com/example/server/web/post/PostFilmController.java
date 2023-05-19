@@ -1,8 +1,8 @@
 package com.example.server.web.post;
 
-import com.example.server.dto.PostFilmDTO;
+import com.example.server.dto.posts.PostFilmDTO;
 import com.example.server.entity.film.PostFilm;
-import com.example.server.facade.PostFilmFacade;
+import com.example.server.facade.posts.PostFilmFacade;
 import com.example.server.payload.response.MessageResponse;
 import com.example.server.services.posts.PostFilmService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package com.example.server.dto;
+package com.example.server.dto.posts;
 
 import lombok.Data;
 
@@ -6,7 +6,7 @@ import javax.validation.constraints.NotEmpty;
 import java.util.Set;
 
 @Data
-public class PostStandUpDTO {
+public class PostConcertDTO {
     private Long id;
     @NotEmpty
     private String title;
@@ -15,9 +15,9 @@ public class PostStandUpDTO {
     @NotEmpty
     private String shortInfo;
     private String genre;
-    private String executor;
     private String address;
     private String image;
+    private String executor;
     private Integer likes;
     private Set<String> usersLiked;
 }

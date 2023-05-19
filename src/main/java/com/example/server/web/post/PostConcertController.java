@@ -1,10 +1,10 @@
 package com.example.server.web.post;
 
-import com.example.server.dto.posts.PostStandUpDTO;
-import com.example.server.entity.standUp.PostStandUp;
-import com.example.server.facade.posts.PostStandUpFacade;
+import com.example.server.dto.posts.PostConcertDTO;
+import com.example.server.entity.concert.PostConcert;
+import com.example.server.facade.posts.PostConcertFacade;
 import com.example.server.payload.response.MessageResponse;
-import com.example.server.services.posts.PostStandUpService;
+import com.example.server.services.posts.PostConcertService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,19 +17,19 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("api/postStandUp")
+@RequestMapping("api/post-concert")
 @CrossOrigin
-public class PostStandUpController {
+public class PostConcertController {
     @Autowired
-    private PostStandUpFacade postFacade;
+    private PostConcertFacade postFacade;
     @Autowired
-    private PostStandUpService postService;
+    private PostConcertService postService;
 
     @GetMapping("/all/{sorted}")
-    public ResponseEntity<List<PostStandUpDTO>> getAllPost(@PathVariable("sorted") String sorted) {
-        List<PostStandUpDTO> postDTOList = postService.getAllPosts()
+    public ResponseEntity<List<PostConcertDTO>> getAllPost(@PathVariable("sorted") String sorted) {
+        List<PostConcertDTO> postDTOList = postService.getAllPosts()
                 .stream()
-                .map(postFacade::postToPostStandUpDTO)
+                .map(postFacade::postToPostConcertDTO)
                 .collect(Collectors.toList());
 
         if (!sorted.equals("default")) {
@@ -41,37 +41,29 @@ public class PostStandUpController {
 
         return new ResponseEntity<>(postDTOList, HttpStatus.OK);
     }
-    /*@GetMapping("/all")
-    public ResponseEntity<List<PostStandUpDTO>> getAllPost() {
-        List<PostStandUpDTO> postDTOList = postService.getAllPosts()
-                .stream()
-                .map(postFacade::postToPostStandUpDTO)
-                .collect(Collectors.toList());
-        return new ResponseEntity<>(postDTOList, HttpStatus.OK);
-    }*/
 
     @GetMapping("/info/{postId}")
-    public ResponseEntity<PostStandUpDTO> getFullInfo(@PathVariable("postId") String postId) {
-        PostStandUp getPost = postService.getPostById(Long.parseLong(postId));
-        PostStandUpDTO postDTO = postFacade.postToPostStandUpDTO(getPost);
+    public ResponseEntity<PostConcertDTO> getFullInfo(@PathVariable("postId") String postId) {
+        PostConcert getPost = postService.getPostById(Long.parseLong(postId));
+        PostConcertDTO postDTO = postFacade.postToPostConcertDTO(getPost);
 
         return new ResponseEntity<>(postDTO, HttpStatus.OK);
     }
 
     @PostMapping("/update")
-    public ResponseEntity<Object> updatePost(@Valid @RequestBody PostStandUpDTO postDTO) {
-        PostStandUp getPost = postService.getPostById(postDTO.getId());
-        PostStandUp updatedPost = postService.updatePost(getPost, postDTO);
+    public ResponseEntity<Object> updatePost(@Valid @RequestBody PostConcertDTO postDTO) {
+        PostConcert getPost = postService.getPostById(postDTO.getId());
+        PostConcert updatedPost = postService.updatePost(getPost, postDTO);
 
-        PostStandUpDTO updatedPostDTO = postFacade.postToPostStandUpDTO(updatedPost);
+        PostConcertDTO updatedPostDTO = postFacade.postToPostConcertDTO(updatedPost);
         return new ResponseEntity<>(updatedPostDTO, HttpStatus.OK);
     }
 
     @PostMapping("/{postId}/{username}/like")
-    public ResponseEntity<PostStandUpDTO> likePost(@PathVariable("postId") String postId,
+    public ResponseEntity<PostConcertDTO> likePost(@PathVariable("postId") String postId,
                                                 @PathVariable("username") String username) {
-        PostStandUp post = postService.likePost(Long.parseLong(postId), username);
-        PostStandUpDTO postDTO = postFacade.postToPostStandUpDTO(post);
+        PostConcert post = postService.likePost(Long.parseLong(postId), username);
+        PostConcertDTO postDTO = postFacade.postToPostConcertDTO(post);
 
         return new ResponseEntity<>(postDTO, HttpStatus.OK);
     }
