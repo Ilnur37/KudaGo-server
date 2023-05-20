@@ -80,7 +80,7 @@ public class PostTheaterController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping("/parser/fullParser")
+    @PostMapping("/parser/full-parser")
     public ResponseEntity<Object> createPostDetails() throws IOException {
         postService.createPostDetails();
         return new ResponseEntity<>(HttpStatus.OK);

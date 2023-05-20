@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("api/postFilm")
+@RequestMapping("api/post-film")
 @CrossOrigin
 public class PostFilmController {
     @Autowired
@@ -80,7 +80,7 @@ public class PostFilmController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping("/parser/fullParser")
+    @PostMapping("/parser/full-parser")
     public ResponseEntity<Object> createPostDetails() throws IOException {
         postService.createPostDetails();
         return new ResponseEntity<>(HttpStatus.OK);

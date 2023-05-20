@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("api/postStandUp")
+@RequestMapping("api/post-standUp")
 @CrossOrigin
 public class PostStandUpController {
     @Autowired
@@ -88,7 +88,7 @@ public class PostStandUpController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping("/parser/fullParser")
+    @PostMapping("/parser/full-parser")
     public ResponseEntity<Object> createPostDetails() throws IOException {
         postService.createPostDetails();
         return new ResponseEntity<>(HttpStatus.OK);

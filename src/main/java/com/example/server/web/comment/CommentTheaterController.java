@@ -1,10 +1,10 @@
 package com.example.server.web.comment;
 
-import com.example.server.dto.comments.CommentStandUpDTO;
-import com.example.server.entity.standUp.CommentStandUp;
-import com.example.server.facade.comments.CommentStandUpFacade;
+import com.example.server.dto.comments.CommentTheaterDTO;
+import com.example.server.entity.theater.CommentTheater;
+import com.example.server.facade.comments.CommentTheaterFacade;
 import com.example.server.payload.response.MessageResponse;
-import com.example.server.services.comments.CommentStandUpService;
+import com.example.server.services.comments.CommentTheaterService;
 import com.example.server.validations.ResponseErrorValidation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,35 +19,35 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/comment-standUp")
+@RequestMapping("/api/comment-theater")
 @CrossOrigin
-public class CommentStandUpController {
+public class CommentTheaterController {
     @Autowired
-    private CommentStandUpService commentService;
+    private CommentTheaterService commentService;
     @Autowired
-    private CommentStandUpFacade commentFacade;
+    private CommentTheaterFacade commentFacade;
     @Autowired
     private ResponseErrorValidation responseErrorValidation;
 
     @PostMapping("/{postId}/create")
-    public ResponseEntity<Object> createComment(@Valid @RequestBody CommentStandUpDTO commentDTO,
-                                               @PathVariable("postId") String postId,
-                                               BindingResult bindingResult,
-                                               Principal principal) {
+    public ResponseEntity<Object> createComment(@Valid @RequestBody CommentTheaterDTO commentDTO,
+                                                @PathVariable("postId") String postId,
+                                                BindingResult bindingResult,
+                                                Principal principal) {
         ResponseEntity<Object> errors = responseErrorValidation.mapValidationService(bindingResult);
         if (!ObjectUtils.isEmpty(errors)) return errors;
 
-        CommentStandUp comment = commentService.saveComment(Long.parseLong(postId), commentDTO, principal);
-        CommentStandUpDTO createdComment = commentFacade.commentToCommentStandUpFacade(comment);
+        CommentTheater comment = commentService.saveComment(Long.parseLong(postId), commentDTO, principal);
+        CommentTheaterDTO createdComment = commentFacade.commentToCommentTheaterDTO(comment);
 
         return new ResponseEntity<>(createdComment, HttpStatus.OK);
     }
 
     @GetMapping("/{postId}/all")
-    public ResponseEntity<List<CommentStandUpDTO>> getAllCommentsToPost(@PathVariable("postId") String postId) {
-        List<CommentStandUpDTO> commentDTOList = commentService.getAllCommentsForPost(Long.parseLong(postId))
+    public ResponseEntity<List<CommentTheaterDTO>> getAllCommentsToPost(@PathVariable("postId") String postId) {
+        List<CommentTheaterDTO> commentDTOList = commentService.getAllCommentsForPost(Long.parseLong(postId))
                 .stream()
-                .map(commentFacade::commentToCommentStandUpFacade)
+                .map(commentFacade::commentToCommentTheaterDTO)
                 .collect(Collectors.toList());
 
         return new ResponseEntity<>(commentDTOList, HttpStatus.OK);

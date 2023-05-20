@@ -6,20 +6,20 @@ import com.example.server.entity.theater.CommentTheater;
 import com.example.server.entity.theater.PostTheater;
 import com.example.server.exceptions.PostNotFoundException;
 import com.example.server.repository.UserRepository;
-import com.example.server.repository.comments.CommentFilmRepository;
 import com.example.server.repository.comments.CommentTheaterRepository;
-import com.example.server.repository.posts.PostFilmRepository;
 import com.example.server.repository.posts.PostTheaterRepository;
 import com.example.server.services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class CommentTheaterService {
     public static final Logger LOG = LoggerFactory.getLogger(UserService.class);
 
