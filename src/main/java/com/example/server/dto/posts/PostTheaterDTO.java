@@ -10,14 +10,15 @@ public class PostTheaterDTO {
     private Long id;
     @NotEmpty
     private String title;
-    @NotEmpty
+    private String titleInfo;
     private String info;
-    @NotEmpty
     private String shortInfo;
     private String genre;
-    private String image;
-    private Integer likes;
     private String address;
+    private String metro;
     private String rating;
+    private String image;
+    private String mainImage;
+    private Integer likes;
     private Set<String> usersLiked;
 }

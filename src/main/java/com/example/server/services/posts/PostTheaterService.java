@@ -42,12 +42,15 @@ public class PostTheaterService {
 
     public PostTheater updatePost(PostTheater post, PostTheaterDTO postDTO) {
         post.setTitle(postDTO.getTitle());
+        post.setTitleInfo(postDTO.getTitleInfo());
         post.setInfo(postDTO.getInfo());
         post.setShortInfo(postDTO.getShortInfo());
         post.setGenre(postDTO.getGenre());
-        post.setImage(postDTO.getImage());
-        post.setAddress(postDTO.getAddress());
         post.setRating(postDTO.getRating());
+        post.setAddress(postDTO.getAddress());
+        post.setMetro(postDTO.getMetro());
+        post.setImage(postDTO.getImage());
+        post.setMainImage(postDTO.getMainImage());
 
         return postRepository.save(post);
     }
@@ -95,12 +98,12 @@ public class PostTheaterService {
                     .first()
                     .text());
 
-            post.setShortInfo(el
+            post.setTitleInfo(el
                     .getElementsByAttributeValue("data-component", "EventCard__EventInfo__Details")
                     .first()
                     .text());
 
-            post.setImage(el
+            post.setMainImage(el
                     .getElementsByClass("NqGVWi")
                     .attr("src"));
 
@@ -122,18 +125,26 @@ public class PostTheaterService {
                     .getElementsByClass("tags tags_size_l tags_theme_light event-concert-heading__tags")
                     .text());
 
-            post.setShortInfo(post.getShortInfo()
-                    + '\n' + postDetails
-                    .getElementsByClass("event-concert-description__argument yandex-sans")
+            post.setShortInfo(postDetails
+                    .getElementsByClass("event-concert-description__cities")
                     .text());
 
             post.setInfo(postDetails
                     .getElementsByClass("concert-description__text-wrap")
                     .text());
 
-            post.setRating(postDetails.
-                    getElementsByClass("Value-ie9gjh-2 iZlkBd")
-                    .text());
+            StringBuilder image = new StringBuilder(postDetails
+                    .getElementsByClass("promo-media-background promo-media-background_type_image i-metrika-timing content-event-emotional__media i-bem")
+                    .attr("style"));
+            if (image.isEmpty()) {
+                image = new StringBuilder(postDetails
+                        .getElementsByClass("promo-media-background promo-media-background_type_video i-metrika-timing content-event-emotional__media i-bem")
+                        .attr("style"));
+            }
+            int len = "background-image:url(".length();
+            image.delete(0, len);
+            image.delete(image.length()-2, image.length());
+            post.setImage(image.toString());
 
             post.setAddress(postDetails
                     .getElementsByClass("place__tag")
@@ -141,7 +152,9 @@ public class PostTheaterService {
                     .getElementsByClass("link link_theme_black i-metrika-block__click i-bem")
                     .text() + "\n" + postDetails
                     .getElementsByClass("place__address")
-                    .text() + "\n" + postDetails
+                    .text());
+
+            post.setMetro(postDetails
                     .getElementsByClass("metro place__metro place__metro_line_one")
                     .text());
 

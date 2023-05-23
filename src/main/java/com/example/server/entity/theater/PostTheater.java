@@ -1,6 +1,5 @@
 package com.example.server.entity.theater;
 
-import com.example.server.entity.film.CommentFilm;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -17,15 +16,18 @@ public class PostTheater {
     private long id;
 
     private String title;
+    private String titleInfo;
     @Column(length = 5000)
     private String info;
     @Column(length = 3000)
     private String shortInfo;
     private String genre;
-    private String image;
-    private Integer likes;
     private String address;
+    private String metro;
     private String rating;
+    private String image;
+    private String mainImage;
+    private Integer likes;
     private String detailsLink;
 
     @Column

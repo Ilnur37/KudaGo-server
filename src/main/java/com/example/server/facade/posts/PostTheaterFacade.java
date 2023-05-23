@@ -10,13 +10,16 @@ public class PostTheaterFacade {
         PostTheaterDTO postDTO = new PostTheaterDTO();
         postDTO.setId(post.getId());
         postDTO.setTitle(post.getTitle());
+        postDTO.setTitleInfo(post.getTitleInfo());
         postDTO.setInfo(post.getInfo());
         postDTO.setShortInfo(post.getShortInfo());
         postDTO.setGenre(post.getGenre());
-        postDTO.setImage(post.getImage());
-        postDTO.setLikes(post.getLikes());
-        postDTO.setAddress(post.getAddress());
         postDTO.setRating(post.getRating());
+        postDTO.setAddress(post.getAddress());
+        postDTO.setMetro(post.getMetro());
+        postDTO.setImage(post.getImage());
+        postDTO.setMainImage(post.getMainImage());
+        postDTO.setLikes(post.getLikes());
         postDTO.setUsersLiked(post.getLikedUser());
 
         return postDTO;
