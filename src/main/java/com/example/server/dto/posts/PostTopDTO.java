@@ -6,13 +6,14 @@ import javax.validation.constraints.NotEmpty;
 import java.util.Set;
 
 @Data
-public class PostConcertDTO {
+public class PostTopDTO {
     private Long id;
     @NotEmpty
     private String title;
     private String titleInfo;
     private String info;
     private String shortInfo;
+    private String rating;
     private String genre;
     private String executor;
     private String address;

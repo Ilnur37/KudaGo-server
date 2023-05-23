@@ -1,9 +1,9 @@
 package com.example.server.services.posts;
 
-import com.example.server.dto.posts.PostConcertDTO;
-import com.example.server.entity.concert.PostConcert;
+import com.example.server.dto.posts.PostTopDTO;
+import com.example.server.entity.top10.PostTop;
 import com.example.server.exceptions.PostNotFoundException;
-import com.example.server.repository.posts.PostConcertRepository;
+import com.example.server.repository.posts.PostTopRepository;
 import com.example.server.services.UserService;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -19,28 +19,28 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class PostConcertService {
+public class PostTopService {
     public static final Logger LOG = LoggerFactory.getLogger(UserService.class);
-    private final PostConcertRepository postRepository;
+    private final PostTopRepository postRepository;
 
     @Autowired
-    public PostConcertService(PostConcertRepository postRepository) {
+    public PostTopService(PostTopRepository postRepository) {
         this.postRepository = postRepository;
     }
 
-    public List<PostConcert> getAllPosts() {
+    public List<PostTop> getAllPosts() {
         return postRepository.findAll();
     }
 
-    public PostConcert getPostById(Long postId) {
-        PostConcert post = postRepository.findById(postId)
+    public PostTop getPostById(Long postId) {
+        PostTop post = postRepository.findById(postId)
                 .orElseThrow(() -> new PostNotFoundException(
                         "Post cannot be found"));
         LOG.info(post.getTitle());
         return post;
     }
 
-    public PostConcert updatePost(PostConcert post, PostConcertDTO postDTO) {
+    public PostTop updatePost(PostTop post, PostTopDTO postDTO) {
         post.setTitle(postDTO.getTitle());
         post.setTitleInfo(postDTO.getTitleInfo());
         post.setInfo(postDTO.getInfo());
@@ -55,8 +55,8 @@ public class PostConcertService {
         return postRepository.save(post);
     }
 
-    public PostConcert likePost(Long postId, String username) {
-        PostConcert post = postRepository.findById(postId)
+    public PostTop likePost(Long postId, String username) {
+        PostTop post = postRepository.findById(postId)
                 .orElseThrow(() -> new PostNotFoundException("Post cannot be found"));
 
         Optional<String> userLiked = post.getLikedUser()
@@ -75,38 +75,35 @@ public class PostConcertService {
     }
 
     public void deletePost(Long postId) {
-        PostConcert post = getPostById(postId);
+        PostTop post = getPostById(postId);
         postRepository.delete(post);
     }
 
     public void createPost() throws IOException {
         Document doc = Jsoup
-                //.connect("https://afisha.yandex.ru/moscow/selections/concert-hot")
-                .connect("https://afisha.yandex.ru/moscow/selections/concert-hot?page=2")
+                .connect("https://afisha.yandex.ru/moscow")
                 .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36")
                 .get();
 
         Elements postTitleEl = doc.
-                getElementsByClass("event events-list__item yandex-sans");
+                getElementsByClass("_34XIDq");
 
         for (Element el : postTitleEl) {
             String detailsLink = "https://afisha.yandex.ru" + el
-                    .getElementsByAttributeValue("data-testid", "event-card-link")
+                    .getElementsByClass("_3M6v7j _3rCu73")
                     .attr("href");
-            PostConcert post = new PostConcert();
+            PostTop post = new PostTop();
 
             post.setTitle(el
-                    .getElementsByAttributeValue("data-component", "EventCard__EventInfo__Title")
-                    .first()
+                    .getElementsByClass("aSkfrF")
                     .text());
 
             post.setTitleInfo(el
-                    .getElementsByAttributeValue("data-component", "EventCard__EventInfo__Details")
-                    .first()
+                    .getElementsByClass("X4UFbS")
                     .text());
 
             post.setMainImage(el
-                    .getElementsByClass("NqGVWi")
+                    .getElementsByClass("_7-kz5s")
                     .attr("src"));
 
             post.setLikes(0);
@@ -118,8 +115,8 @@ public class PostConcertService {
     }
 
     public void createPostDetails() throws IOException {
-        List<PostConcert> allPosts = postRepository.findAll();
-        for (PostConcert post : allPosts) {
+        List<PostTop> allPosts = postRepository.findAll();
+        for (PostTop post : allPosts) {
             if (post.getGenre() != null) continue;
             if (post.getDetailsLink() == null) continue;
             Document postDetails = Jsoup.connect(post.getDetailsLink()).get();
@@ -138,6 +135,10 @@ public class PostConcertService {
             post.setExecutor(postDetails
                     .getElementsByClass("StyledLogo-u88k37-0 cYGlYr")
                     .attr("alt"));
+
+            post.setRating(postDetails.
+                    getElementsByClass("Value-ie9gjh-2 iZlkBd")
+                    .text());
 
             StringBuilder image = new StringBuilder(postDetails
                     .getElementsByClass("promo-media-background promo-media-background_type_image i-metrika-timing content-event-emotional__media i-bem")

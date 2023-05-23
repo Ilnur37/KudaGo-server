@@ -1,4 +1,4 @@
-package com.example.server.entity.concert;
+package com.example.server.entity.top10;
 
 import lombok.Data;
 
@@ -10,7 +10,7 @@ import java.util.Set;
 
 @Data
 @Entity
-public class PostConcert {
+public class PostTop {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -19,8 +19,9 @@ public class PostConcert {
     private String titleInfo;
     @Column(length = 5000)
     private String info;
-    @Column(length = 3000)
+    @Column(length = 1000)
     private String shortInfo;
+    private String rating;
     private String genre;
     private String executor;
     private String address;
@@ -36,8 +37,8 @@ public class PostConcert {
 
     @OneToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER,
             mappedBy = "post", orphanRemoval = true)
-    private List<CommentConcert> comments = new ArrayList<>();
+    private List<CommentTop> comments = new ArrayList<>();
 
-    public PostConcert() {
+    public PostTop() {
     }
 }
