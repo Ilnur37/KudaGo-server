@@ -16,6 +16,7 @@ public class PostStandUp {
     private long id;
 
     private String title;
+    private String titleInfo;
     @Column(length = 5000)
     private String info;
     @Column(length = 1000)
@@ -23,7 +24,9 @@ public class PostStandUp {
     private String genre;
     private String executor;
     private String address;
+    private String metro;
     private String image;
+    private String mainImage;
     private Integer likes;
     private String detailsLink;
 

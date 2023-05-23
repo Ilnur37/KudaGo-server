@@ -136,9 +136,13 @@ public class PostFilmService {
                     getElementsByClass("Value-ie9gjh-2 iZlkBd")
                     .text());
 
-            post.setImage(postDetails
-                    .getElementsByClass("image event-concert-heading__poster")
-                    .attr("src"));
+            StringBuilder image = new StringBuilder(postDetails
+                    .getElementsByClass("promo-media-background promo-media-background_type_image i-metrika-timing content-event-emotional__media i-bem")
+                    .attr("style"));
+            int len = "background-image:url(".length();
+            image.delete(0, len);
+            image.delete(image.length()-2, image.length());
+            post.setImage(image.toString());
 
             postRepository.save(post);
         }

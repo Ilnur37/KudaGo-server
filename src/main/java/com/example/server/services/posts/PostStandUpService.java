@@ -42,12 +42,15 @@ public class PostStandUpService {
 
     public PostStandUp updatePost(PostStandUp post, PostStandUpDTO postDTO) {
         post.setTitle(postDTO.getTitle());
+        post.setTitleInfo(postDTO.getTitleInfo());
         post.setInfo(postDTO.getInfo());
         post.setShortInfo(postDTO.getShortInfo());
         post.setGenre(postDTO.getGenre());
         post.setExecutor(postDTO.getExecutor());
         post.setAddress(postDTO.getAddress());
+        post.setMetro(postDTO.getMetro());
         post.setImage(postDTO.getImage());
+        post.setMainImage(postDTO.getMainImage());
 
         return postRepository.save(post);
     }
@@ -67,7 +70,8 @@ public class PostStandUpService {
             post.setLikes(post.getLikes() + 1);
             post.getLikedUser().add(username);
         }
-        return postRepository.save(post);
+        postRepository.save(post);
+        return post;
     }
 
     public void deletePost(Long postId) {
@@ -77,7 +81,8 @@ public class PostStandUpService {
 
     public void createPost() throws IOException {
         Document doc = Jsoup
-                .connect("https://afisha.yandex.ru/moscow/selections/standup-top")
+                //.connect("https://afisha.yandex.ru/moscow/selections/all-events-standup")
+                .connect("https://afisha.yandex.ru/moscow/selections/standup-nearest?page=2")
                 .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36")
                 .get();
 
@@ -95,12 +100,12 @@ public class PostStandUpService {
                     .first()
                     .text());
 
-            post.setShortInfo(el
+            post.setTitleInfo(el
                     .getElementsByAttributeValue("data-component", "EventCard__EventInfo__Details")
                     .first()
                     .text());
 
-            post.setImage(el
+            post.setMainImage(el
                     .getElementsByClass("NqGVWi")
                     .attr("src"));
 
@@ -122,8 +127,7 @@ public class PostStandUpService {
                     .getElementsByClass("tags tags_size_l tags_theme_light event-concert-heading__tags")
                     .text());
 
-            post.setShortInfo(post.getShortInfo()
-                    + '\n' + postDetails
+            post.setShortInfo(postDetails
                     .getElementsByClass("event-concert-description__cities")
                     .text());
 
@@ -135,13 +139,28 @@ public class PostStandUpService {
                     .getElementsByClass("StyledLogo-u88k37-0 cYGlYr")
                     .attr("alt"));
 
+            StringBuilder image = new StringBuilder(postDetails
+                    .getElementsByClass("promo-media-background promo-media-background_type_image i-metrika-timing content-event-emotional__media i-bem")
+                    .attr("style"));
+            if (image.isEmpty()) {
+                image = new StringBuilder(postDetails
+                        .getElementsByClass("promo-media-background promo-media-background_type_video i-metrika-timing content-event-emotional__media i-bem")
+                        .attr("style"));
+            }
+            int len = "background-image:url(".length();
+            image.delete(0, len);
+            image.delete(image.length()-2, image.length());
+            post.setImage(image.toString());
+
             post.setAddress(postDetails
                     .getElementsByClass("place__tag")
                     .text() + "\n" + postDetails
                     .getElementsByClass("link link_theme_black i-metrika-block__click i-bem")
                     .text() + "\n" + postDetails
                     .getElementsByClass("place__address")
-                    .text() + "\n" + postDetails
+                    .text());
+
+            post.setMetro(postDetails
                     .getElementsByClass("metro place__metro place__metro_line_one")
                     .text());
 
