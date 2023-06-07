@@ -41,14 +41,6 @@ public class PostStandUpController {
 
         return new ResponseEntity<>(postDTOList, HttpStatus.OK);
     }
-    /*@GetMapping("/all")
-    public ResponseEntity<List<PostStandUpDTO>> getAllPost() {
-        List<PostStandUpDTO> postDTOList = postService.getAllPosts()
-                .stream()
-                .map(postFacade::postToPostStandUpDTO)
-                .collect(Collectors.toList());
-        return new ResponseEntity<>(postDTOList, HttpStatus.OK);
-    }*/
 
     @GetMapping("/info/{postId}")
     public ResponseEntity<PostStandUpDTO> getFullInfo(@PathVariable("postId") String postId) {

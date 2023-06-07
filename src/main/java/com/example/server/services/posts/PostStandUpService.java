@@ -110,6 +110,7 @@ public class PostStandUpService {
                     .attr("src"));
 
             post.setLikes(0);
+            post.setReferenceInfo("/standUp/info/");
 
             post.setDetailsLink(detailsLink);
 

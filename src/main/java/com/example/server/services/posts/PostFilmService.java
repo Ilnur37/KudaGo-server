@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,6 +34,38 @@ public class PostFilmService {
         return postRepository.findAll();
     }
 
+    public List<PostFilmDTO> getFilteredPosts(List<PostFilmDTO> postDTOList, String sortLike, String sortGenre) {
+        if (!sortGenre.equals("default")) {
+            if (sortGenre.equals("g1")) sortGenre ="Авторское кино";
+            if (sortGenre.equals("g2")) sortGenre ="Боевик";
+            if (sortGenre.equals("g3")) sortGenre ="Детектив";
+            if (sortGenre.equals("g4")) sortGenre ="Драма";
+            if (sortGenre.equals("g5")) sortGenre ="Комедия";
+            if (sortGenre.equals("g6")) sortGenre ="Мелодрама";
+            if (sortGenre.equals("g7")) sortGenre ="Мультфильм";
+            if (sortGenre.equals("g8")) sortGenre ="Приключения";
+            if (sortGenre.equals("g9")) sortGenre ="Семейное кино";
+            if (sortGenre.equals("g10")) sortGenre ="Трагикомедия";
+            if (sortGenre.equals("g11")) sortGenre ="Триллер";
+            if (sortGenre.equals("g12")) sortGenre ="Ужасы";
+            if (sortGenre.equals("g13")) sortGenre ="Фантастика";
+
+            Iterator<PostFilmDTO> iterator = postDTOList.iterator();
+            while (iterator.hasNext()) {
+                PostFilmDTO post = iterator.next();
+                if (!post.getGenre().contains(sortGenre)) { //тут вы как-то понимаете что элемент нужно удалить
+                    iterator.remove();
+                }
+            }
+        }
+        if (!sortLike.equals("default")) {
+            Collections.sort(postDTOList, (o1, o2) -> o1.getLikes() - o2.getLikes());
+            if (sortLike.equals("desc"))
+                Collections.reverse(postDTOList);
+        }
+        return postDTOList;
+    }
+
     public PostFilm getPostById(Long postId) {
         PostFilm post = postRepository.findById(postId)
                 .orElseThrow(() -> new PostNotFoundException(
@@ -47,7 +81,7 @@ public class PostFilmService {
         post.setGenre(postDTO.getGenre());
         post.setCinema(postDTO.getCinema());
         post.setImage(postDTO.getImage());
-        post.setBackgroundImg(postDTO.getBackgroundImg());
+        post.setBackgroundImg(postDTO.getMainImage());
 
         return postRepository.save(post);
     }
@@ -105,6 +139,7 @@ public class PostFilmService {
                     .attr("src"));
 
             post.setLikes(0);
+            post.setReferenceInfo("/film/");
 
             post.setDetailsLink(detailsLink);
 

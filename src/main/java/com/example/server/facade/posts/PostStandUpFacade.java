@@ -21,6 +21,7 @@ public class PostStandUpFacade {
         postDTO.setMainImage(post.getMainImage());
         postDTO.setLikes(post.getLikes());
         postDTO.setUsersLiked(post.getLikedUser());
+        postDTO.setReferenceInfo(post.getReferenceInfo());
 
         return postDTO;
     }

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 @RequestMapping("api/user")
@@ -40,6 +41,13 @@ public class UserController {
         UserDTO userDTO = userFacade.userToUserDTO(user);
 
         return new ResponseEntity<>(userDTO, HttpStatus.OK);
+    }
+
+    @GetMapping("/favourite")
+    public ResponseEntity<List<Object>> getFavouritePosts(Principal principal) {
+        List<Object> favouritePosts = userService.getFavouritePosts(principal);
+
+        return new ResponseEntity<>(favouritePosts, HttpStatus.OK);
     }
 
     @PostMapping("/update")

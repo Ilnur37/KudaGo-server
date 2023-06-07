@@ -29,6 +29,7 @@ public class PostConcert {
     private String mainImage;
     private Integer likes;
     private String detailsLink;
+    private String referenceInfo;
 
     @Column
     @ElementCollection(targetClass = String.class)

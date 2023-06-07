@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,24 +24,18 @@ public class PostFilmController {
     @Autowired
     private PostFilmService postService;
 
-    @GetMapping("/all/{sorted}")
-    public ResponseEntity<List<PostFilmDTO>> getAllPost(@PathVariable("sorted") String sorted) {
+    @GetMapping("/all/{sortLike}/{sortGenre}")
+    public ResponseEntity<List<PostFilmDTO>> getAllPost(@PathVariable("sortLike") String sortLike,
+                                                        @PathVariable("sortGenre") String sortGenre) {
         List<PostFilmDTO> postDTOList = postService.getAllPosts()
                 .stream()
                 .map(postFacade::postToPostFilmDTO)
                 .collect(Collectors.toList());
 
-        if (!sorted.equals("default")) {
-            Collections.sort(postDTOList, (o1, o2) -> o1.getLikes() - o2.getLikes());
-
-            if (sorted.equals("desc"))
-                Collections.reverse(postDTOList);
-        }
-
-        return new ResponseEntity<>(postDTOList, HttpStatus.OK);
+        return new ResponseEntity<>(postService.getFilteredPosts(postDTOList, sortLike, sortGenre), HttpStatus.OK);
     }
 
-    @GetMapping("/info/{postId}")
+    @GetMapping("/{postId}")
     public ResponseEntity<PostFilmDTO> getFullInfo(@PathVariable("postId") String postId) {
         PostFilm getPost = postService.getPostById(Long.parseLong(postId));
         PostFilmDTO postDTO = postFacade.postToPostFilmDTO(getPost);

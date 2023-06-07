@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,21 +24,15 @@ public class PostConcertController {
     @Autowired
     private PostConcertService postService;
 
-    @GetMapping("/all/{sorted}")
-    public ResponseEntity<List<PostConcertDTO>> getAllPost(@PathVariable("sorted") String sorted) {
+    @GetMapping("/all/{sortLike}/{sortGenre}")
+    public ResponseEntity<List<PostConcertDTO>> getAllPost(@PathVariable("sortLike") String sortLike,
+                                                           @PathVariable("sortGenre") String sortGenre) {
         List<PostConcertDTO> postDTOList = postService.getAllPosts()
                 .stream()
                 .map(postFacade::postToPostConcertDTO)
                 .collect(Collectors.toList());
 
-        if (!sorted.equals("default")) {
-            Collections.sort(postDTOList, (o1, o2) -> o1.getLikes() - o2.getLikes());
-
-            if (sorted.equals("desc"))
-                Collections.reverse(postDTOList);
-        }
-
-        return new ResponseEntity<>(postDTOList, HttpStatus.OK);
+        return new ResponseEntity<>(postService.getFilteredPosts(postDTOList, sortLike, sortGenre), HttpStatus.OK);
     }
 
     @GetMapping("/info/{postId}")

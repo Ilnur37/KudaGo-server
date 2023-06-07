@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,6 +32,35 @@ public class PostConcertService {
 
     public List<PostConcert> getAllPosts() {
         return postRepository.findAll();
+    }
+
+    public List<PostConcertDTO> getFilteredPosts(List<PostConcertDTO> postDTOList, String sortLike, String sortGenre) {
+        if (!sortGenre.equals("default")) {
+            if (sortGenre.equals("g1")) sortGenre ="Вечеринка";
+            if (sortGenre.equals("g2")) sortGenre ="Детям";
+            if (sortGenre.equals("g3")) sortGenre ="Джаз и блюз";
+            if (sortGenre.equals("g4")) sortGenre ="Классическая музыка";
+            if (sortGenre.equals("g5")) sortGenre ="На воздухе";
+            if (sortGenre.equals("g6")) sortGenre ="Поп";
+            if (sortGenre.equals("g7")) sortGenre ="Рок";
+            if (sortGenre.equals("g8")) sortGenre ="Фестиваль";
+            if (sortGenre.equals("g9")) sortGenre ="Хип-хоп и рэп";
+            if (sortGenre.equals("g10")) sortGenre ="Эстрада";
+
+            Iterator<PostConcertDTO> iterator = postDTOList.iterator();
+            while (iterator.hasNext()) {
+                PostConcertDTO post = iterator.next();
+                if (!post.getGenre().contains(sortGenre)) { //тут вы как-то понимаете что элемент нужно удалить
+                    iterator.remove();
+                }
+            }
+        }
+        if (!sortLike.equals("default")) {
+            Collections.sort(postDTOList, (o1, o2) -> o1.getLikes() - o2.getLikes());
+            if (sortLike.equals("desc"))
+                Collections.reverse(postDTOList);
+        }
+        return postDTOList;
     }
 
     public PostConcert getPostById(Long postId) {
@@ -110,6 +141,7 @@ public class PostConcertService {
                     .attr("src"));
 
             post.setLikes(0);
+            post.setReferenceInfo("/concert/");
 
             post.setDetailsLink(detailsLink);
 

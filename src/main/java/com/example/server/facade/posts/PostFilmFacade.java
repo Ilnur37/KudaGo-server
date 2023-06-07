@@ -15,10 +15,11 @@ public class PostFilmFacade {
         postDTO.setGenre(post.getGenre());
         postDTO.setCinema(post.getCinema());
         postDTO.setImage(post.getImage());
-        postDTO.setBackgroundImg(post.getBackgroundImg());
+        postDTO.setMainImage(post.getBackgroundImg());
         postDTO.setLikes(post.getLikes());
         postDTO.setRating(post.getRating());
         postDTO.setUsersLiked(post.getLikedUser());
+        postDTO.setReferenceInfo(post.getReferenceInfo());
 
         return postDTO;
     }

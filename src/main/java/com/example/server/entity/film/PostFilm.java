@@ -27,6 +27,7 @@ public class PostFilm {
     private Integer likes;
     private String rating;
     private String detailsLink;
+    private String referenceInfo;
 
     @Column
     @ElementCollection(targetClass = String.class)

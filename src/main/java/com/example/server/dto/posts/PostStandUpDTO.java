@@ -21,4 +21,5 @@ public class PostStandUpDTO {
     private String mainImage;
     private Integer likes;
     private Set<String> usersLiked;
+    private String referenceInfo;
 }
