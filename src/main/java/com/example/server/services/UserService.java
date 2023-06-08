@@ -24,7 +24,7 @@ import org.springframework.stereotype.Service;
 
 import java.awt.*;
 import java.security.Principal;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
 
 @Service
@@ -39,6 +39,7 @@ public class UserService {
     private PostStandUpFacade postStandUpFacade;
     private PostConcertRepository postConcertRepository;
     private PostConcertFacade postConcertFacade;
+    private List<Integer> indexOfPostToDelete = new ArrayList<>();
 
     @Autowired
     public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder,
@@ -112,6 +113,116 @@ public class UserService {
         return favouritePosts;
     }
 
+    public List<Object> getRecommendations(Principal principal) {
+        this.indexOfPostToDelete.clear();
+        User user = getUserByPrincipal(principal);
+        String name = user.getUsername();
+
+        List<Object> recommendations = new ArrayList<>();
+        HashMap<String, Integer> countGenre = new HashMap<>();
+        List<String> topGenres;
+        int count = 0;
+
+        List<PostFilm> postsFilm = postFilmRepository.findAll();
+        for (int i = 0; i < postsFilm.size() - 1; i++) {
+            if (postsFilm.get(i).getLikedUser().contains(name)) {
+                String[] genres = postsFilm.get(i).getGenre().split("-");
+                this.indexOfPostToDelete.add(i);
+                for (String str : genres) {
+                    if (countGenre.containsKey(str)) {
+                        countGenre.put(str, countGenre.get(str) + 1);
+                    } else {
+                        countGenre.put(str, 1);
+                    }
+                }
+            }
+        }
+        for (int i = this.indexOfPostToDelete.size() - 1; i > -1; i --) {
+            postsFilm.remove(Integer.parseInt(String.valueOf(this.indexOfPostToDelete.get(i))));
+        }
+        topGenres = this.sortByValue(countGenre);
+        for (PostFilm post : postsFilm) {
+            if (count > 2) break;
+            for (String str : topGenres) {
+                if (post.getGenre().contains(str)) {
+                    recommendations.add(postFilmFacade.postToPostFilmDTO(post));
+                    count++;
+                    break;
+                }
+            }
+        }
+        countGenre.clear();
+        topGenres.clear();
+        this.indexOfPostToDelete.clear();
+        count = 0;
+
+
+        List<PostStandUp> postStandUps = postStandUpRepository.findAll();
+        for (int i = 0; i < postStandUps.size() - 1; i++) {
+            if (postStandUps.get(i).getLikedUser().contains(name)) {
+                String[] genres = postStandUps.get(i).getGenre().split("-");
+                this.indexOfPostToDelete.add(i);
+                for (String str : genres) {
+                    if (countGenre.containsKey(str)) {
+                        countGenre.put(str, countGenre.get(str) + 1);
+                    } else {
+                        countGenre.put(str, 1);
+                    }
+                }
+            }
+        }
+        for (int i = this.indexOfPostToDelete.size() - 1; i > -1; i --) {
+            postStandUps.remove(Integer.parseInt(String.valueOf(this.indexOfPostToDelete.get(i))));
+        }
+        topGenres = this.sortByValue(countGenre);
+        for (PostStandUp post : postStandUps) {
+            if (count > 2) break;
+            for (String str : topGenres) {
+                if (post.getGenre().contains(str)) {
+                    recommendations.add(postStandUpFacade.postToPostStandUpDTO(post));
+                    count++;
+                    break;
+                }
+            }
+        }
+        countGenre.clear();
+        topGenres.clear();
+        this.indexOfPostToDelete.clear();
+        count = 0;
+
+
+        List<PostConcert> postConcert = postConcertRepository.findAll();
+        for (int i = 0; i < postConcert.size() - 1; i++) {
+            if (postConcert.get(i).getLikedUser().contains(name)) {
+                String[] genres = postConcert.get(i).getGenre().split("-");
+                this.indexOfPostToDelete.add(i);
+                for (String str : genres) {
+                    if (countGenre.containsKey(str)) {
+                        countGenre.put(str, countGenre.get(str) + 1);
+                    } else {
+                        countGenre.put(str, 1);
+                    }
+                }
+            }
+        }
+        for (int i = this.indexOfPostToDelete.size() - 1; i > -1; i --) {
+            postConcert.remove(Integer.parseInt(String.valueOf(this.indexOfPostToDelete.get(i))));
+        }
+        topGenres = this.sortByValue(countGenre);
+        for (PostConcert post : postConcert) {
+            if (count > 2) break;
+            for (String str : topGenres) {
+                if (post.getGenre().contains(str)) {
+                    recommendations.add(postConcertFacade.postToPostConcertDTO(post));
+                    count++;
+                    break;
+                }
+            }
+        }
+
+        return recommendations;
+    }
+
     public User updateUser(UserDTO userDTO, Principal principal) {
         User user = getUserByPrincipal(principal);
         user.setName(userDTO.getFirstname());
@@ -126,5 +237,27 @@ public class UserService {
         return userRepository.findUserByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException(
                         "User not found with username " + username));
+    }
+
+    private List<String> sortByValue(HashMap<String, Integer> hm) {
+        List<String> topGenres = new ArrayList<>();
+        // Create a list from elements of HashMap
+        List<Map.Entry<String, Integer>> list =
+                new LinkedList<Map.Entry<String, Integer> >(hm.entrySet());
+
+        // Sort the list
+        list.sort(new Comparator<Map.Entry<String, Integer>>() {
+            public int compare(Map.Entry<String, Integer> o1,
+                               Map.Entry<String, Integer> o2) {
+                return (o1.getValue()).compareTo(o2.getValue());
+            }
+        });
+
+        for (int i = list.size() - 1; i > -1; i--) {
+            topGenres.add(list.get(i).getKey());
+            if (topGenres.size() > 4) break;
+        }
+
+        return topGenres;
     }
 }

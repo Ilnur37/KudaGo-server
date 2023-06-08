@@ -50,6 +50,13 @@ public class UserController {
         return new ResponseEntity<>(favouritePosts, HttpStatus.OK);
     }
 
+    @GetMapping("/recommendations")
+    public ResponseEntity<List<Object>> getRecommendationsPosts(Principal principal) {
+        List<Object> favouritePosts = userService.getRecommendations(principal);
+
+        return new ResponseEntity<>(favouritePosts, HttpStatus.OK);
+    }
+
     @PostMapping("/update")
     public ResponseEntity<Object> updateUser(@Valid @RequestBody UserDTO userDTO,
                                              BindingResult bindingResult,
