@@ -43,14 +43,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
                 .antMatchers(SecurityConstants.SIGN_UP_URLS).permitAll()
                 .anyRequest().authenticated();
 
-        /*http.csrf().disable()
-                .authorizeRequests() // authorize
-                .anyRequest().authenticated() // all requests are authenticated
-                .and()
-                .httpBasic();
-
-        http.cors();*/
-
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 

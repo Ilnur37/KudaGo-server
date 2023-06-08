@@ -60,5 +60,4 @@ public class AuthController {
         userService.createUser(signupRequest);
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }
-
 }
